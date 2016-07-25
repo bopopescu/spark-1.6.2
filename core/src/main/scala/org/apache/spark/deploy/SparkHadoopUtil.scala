@@ -135,6 +135,10 @@ class SparkHadoopUtil extends Logging {
     UserGroupInformation.loginUserFromKeytab(principalName, keytabFilename)
   }
 
+  def addCredentialsToCurrentUser(credentials: Credentials, freshHadoopConf: Configuration): Unit ={
+    UserGroupInformation.getCurrentUser.addCredentials(credentials)
+    FileSystem.get(freshHadoopConf).close()
+  }
   /**
    * Returns a function that can be called to find Hadoop FileSystem bytes read. If
    * getFSBytesReadOnThreadCallback is called from thread r at time t, the returned callback will
@@ -314,7 +318,6 @@ class SparkHadoopUtil extends Logging {
 
     val renewalInterval =
       sparkConf.getLong("spark.yarn.token.renewal.interval", (24 hours).toMillis)
-
     credentials.getAllTokens.asScala
       .filter(_.getKind == DelegationTokenIdentifier.HDFS_DELEGATION_KIND)
       .map { t =>
