@@ -1,0 +1,1 @@
+export MAVEN_HOME=/export/App/dev/apache-maven-3.3.9; export PATH=$MAVEN_HOME/bin:$PATH; ./make-distribution.sh --skip-java-test --tgz --mvn mvn -Pyarn -Phadoop-2.6 -Dhadoop.version=2.6.1.1 -Phive -Phive-thriftserver -Pspark-ganglia-lgpl
